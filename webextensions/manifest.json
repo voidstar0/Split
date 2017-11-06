@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "Split",
+    "description": "Organize your tabs with ease,",
+    "version": "1.1",
+    "icons" : {
+        "48": "logo-48.png",
+        "96": "logo-96.png",
+        "128": "logo-128.png"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "commands": {
+        "organize-tabs": {
+            "suggested_key": {"default":"Ctrl+Shift+U"},
+            "description": "Group your tabs."
+        },
+        "split-tabs": {
+            "suggested_key": {"default":"Ctrl+Shift+Y"},
+            "description": "Split your tabs into new windows."
+        }
+    },
+    "permissions": [
+        "tabs"
+    ]
+}
