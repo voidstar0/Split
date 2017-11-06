@@ -19,6 +19,7 @@
 2. Clean your tabs!
 
    `Ctrl+Shift+U` is the default binding for grouping your tabs in the same window.
+   
    `Ctrl+Shift+Y` is the default binding for splitting your tabs into different windows.
    
    Binds can be changed on chrome by heading to `chrome://extensions/` and navigating to `Keyboard shortcuts` at the bottom of the page.
