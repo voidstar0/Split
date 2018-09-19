@@ -53,7 +53,7 @@ function removeNewTabs(tabWindow) {
         tabs.forEach(tab => {
             let url = new URL(tab.url);
 
-            if(url.hostname == "") 
+            if(url.hostname === 'newtab') 
                 browser.tabs.remove(tab.id)
         });
 
@@ -78,10 +78,21 @@ browser.tabs.onUpdated.addListener(function(wt) {
 });
 
 browser.commands.onCommand.addListener(function(command) {
-    if(command == "organize-tabs") {
+    if(command === 'group-tabs') {
         groupTabs();
     }
-    if(command == "split-tabs") {
+    if(command === 'split-tabs') {
+        splitTabs();
+    }
+});
+
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+
+    if (request.command === 'group-tabs'){
+        groupTabs();
+    }
+
+    if (request.command === 'split-tabs') {
         splitTabs();
     }
 });
