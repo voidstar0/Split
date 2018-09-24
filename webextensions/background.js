@@ -33,8 +33,8 @@ let windowInfo = new WindowTabInfo();
 
 function updateWindowInfo() {
     windowInfo.clearTabInfo();
-    browser.tabs.query({currentWindow: true}, tabs => {
-        tabs.forEach(tab => {
+    browser.tabs.query({currentWindow: true}, (tabs) => {
+        tabs.forEach((tab) => {
             let url = new URL(tab.url);
             windowInfo.addTab({hostname: url.hostname, id: tab.id});
         });
@@ -42,15 +42,15 @@ function updateWindowInfo() {
 }
 
 function groupTabs() {
-    windowInfo.hostnames().forEach(hostname => {
+    windowInfo.hostnames().forEach((hostname) => {
         browser.tabs.move(windowInfo.tabIdsWithHostname(hostname), {index: -1});
     });
 }
 
 function removeNewTabs(tabWindow) {
-    browser.tabs.query({windowId: tabWindow}, tabs => {
+    browser.tabs.query({windowId: tabWindow}, (tabs) => {
 
-        tabs.forEach(tab => {
+        tabs.forEach((tab) => {
             let url = new URL(tab.url);
 
             if(url.hostname === 'newtab') 
@@ -61,8 +61,8 @@ function removeNewTabs(tabWindow) {
 }
 
 function splitTabs() {
-    windowInfo.hostnames().forEach(hostname => {
-        browser.windows.create({}, createdWindow => {
+    windowInfo.hostnames().forEach((hostname) => {
+        browser.windows.create({}, (createdWindow) => {
             browser.tabs.move(windowInfo.tabIdsWithHostname(hostname), {index: -1, windowId: createdWindow.id});
             removeNewTabs(createdWindow.id);
         });
@@ -73,26 +73,23 @@ function splitTabs() {
 * Browser Listeners
 */
 
-browser.tabs.onUpdated.addListener(function(wt) {
+browser.tabs.onUpdated.addListener(_ => {
     updateWindowInfo(); 
 });
 
-browser.commands.onCommand.addListener(function(command) {
+const organizeTabs = (command) => {
     if(command === 'group-tabs') {
         groupTabs();
     }
     if(command === 'split-tabs') {
         splitTabs();
     }
+}
+
+browser.commands.onCommand.addListener((command) => {
+    organizeTabs(command);
 });
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-
-    if (request.command === 'group-tabs'){
-        groupTabs();
-    }
-
-    if (request.command === 'split-tabs') {
-        splitTabs();
-    }
+    organizeTabs(request.command);
 });
